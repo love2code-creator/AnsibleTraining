@@ -1,0 +1,82 @@
+---
+- name: install httpd
+  hosts: webservers
+  become: true
+  vars:
+    web_package: httpd
+    web_service: httpd
+  ignore_errors: true
+  tasks:
+    - name: Install Apache Webserver
+      yum:
+        name: "{{ web_package }}"
+        state: present
+    - name: Start Apache Webserver
+      service:
+        name: "{{ web_service }}"
+        state: started
+        enabled: yes
+    - name: decalre vars
+      set_fact:
+        test_var: "This is a test variable"
+    - name: print the variable
+      debug:
+        var: web_package
+    - name: print the variable with message
+      debug:
+        msg: "web_package installed in server is: {{ web_package }}"
+
+
+- name: install db
+  hosts: dbservers
+  become: true
+  tasks:
+    - name: Install mariaDB Server
+      yum:
+        name: mariadb-server
+        state: present
+
+    - name: Start MariaDB Server
+      service:
+        name: mariadb
+        state: started
+        enabled: yes
+
+- name: install db
+  hosts: dbservers
+  become: true
+  tasks:
+    - name: Install mariaDB Server
+      yum:
+        name: mariadb-server
+        state: present
+
+    - name: Start MariaDB Server
+      service:
+        name: mariadb
+        state: started
+        enabled: yes
+
+- name: prod server tasks
+  hosts: prod
+  become: true
+  tasks:
+    - name: Prod server command
+      command: hostname
+      register: command_result
+
+    - name: prod server command result
+      debug:
+        var: command_result.stdout
+
+- name: dev server tasks
+  hosts: dev
+  become: true
+  tasks:
+    - name: dev server tasks
+      command: hostname
+      register: command_result
+
+    - name: dev server result
+      debug:
+        var: command_result.stdout
