@@ -1,0 +1,44 @@
+all:
+  hosts:
+    mail.example.com:
+  children:
+    webservers:
+      hosts:
+        172.31.24.146
+    dbservers:
+      hosts:
+        172.31.26.221
+    prod:
+      children:
+         webservers:
+         dbservers:
+      hosts:
+         172.31.26.52
+    dev:
+      children:
+        dbservers:
+        webservers:
+      hosts:
+        172.31.30.232
+
+
+[webservers]
+172.31.24.146
+
+[dbservers]
+172.31.26.221
+
+[prod]
+172.31.26.52
+
+[dev]
+172.31.30.232
+
+[prod:children]
+webservers
+dbservers
+
+[dev:children]
+webservers
+dbservers
+
